@@ -10,7 +10,7 @@
 // --------------------------------------------------
 
 // First, we create a variable for the current scene being displayed
-let currentScene = "backyard";
+let currentScene = "main_hallway";
 
 // Then, we create an object that stores the data for each scene,
 const scenes = {
@@ -89,7 +89,141 @@ const scenes = {
     title: "The solution",
     text: "You solved the mystery!",
     
-  }
+  },
+
+  main_hallway: {
+    title: "Location: Main Hallway",
+    character: "Objective: Search for your Supervisor",
+    text: "",
+    // you can choose how many choices to include
+    // each choice can have text, an action, and/or nextScene
+    choices: [
+      {
+        text: "Enter Break Room",
+        nextScene: "break_room"
+      },
+      {
+        text: "Enter Maintainance Hallway <strong>(Locked)</strong>",
+        action: maintHallway
+      },
+      {
+          text: "Enter General Offices",
+          nextScene: "general_offices"
+      }
+    ]
+  },
+
+  general_offices: {
+    title: "Location: General Offices",
+    character: "Objective: Search for your Supervisor",
+    text: "",
+    choices: [
+      {
+        text: "Speak to <em>Supervisor</em>",
+        nextScene: "main_hallway"
+      },
+      {
+        text: "Exit",
+        nextScene: "main_hallway"
+      },
+      {
+          text: "Speak to <em>Intern</em>",
+          nextScene: "main_hallway"
+      }
+    ]
+  },
+
+  break_room: {
+    title: "Location: Break Room",
+    character: "Objective: Search for your Supervisor",
+    text: "",
+    choices: [
+      {
+        text: "Use <em>Vending Machine</em>",
+        nextScene: "main_hallway"
+      },
+      {
+        text: "Exit",
+        nextScene: "main_hallway"
+      },
+      {
+          text: "Speak to <em>Jameson</em>",
+          nextScene: "main_hallway"
+      }
+    ]
+  },
+
+  maint_hallway: {
+    title: "Location: Maintainance Hallway",
+    character: "Objective: Search for your Supervisor",
+    text: "",
+    choices: [
+      {
+        text: "Enter Storage Room",
+        nextScene: "storage_room"
+      },
+      {
+        text: "Exit",
+        nextScene: "main_hallway"
+      },
+      {
+        text: "Inspect Bulletin Board",
+        nextScene: "maint_hallway"
+      },
+      {
+          text: "Enter Industrial Processing <strong>(Locked)</strong>",
+          nextScene: "main_hallway"
+      }
+    ]
+  },
+
+  storage_room: {
+    title: "Location: Storage Room",
+    character: "Objective: Search for your Supervisor",
+    text: "",
+    choices: [
+      {
+        text: "Exit",
+        nextScene: "maint_hallway"
+      },
+      {
+        text: "Inspect Upper Drawer",
+        nextScene: "maint_hallway"
+      },
+      {
+        text: "Inspect Lower Drawer",
+        nextScene: "maint_hallway"
+      },
+      {
+          text: "Inspect Electrical Panel",
+          nextScene: "maint_hallway"
+      }
+    ]
+  },
+
+  processing: {
+    title: "Location: Industrial Processing",
+    character: "Objective: Search for your Supervisor",
+    text: "",
+    choices: [
+      {
+        text: "Exit",
+        nextScene: "maint_hallway"
+      },
+      {
+        text: "Inspect Desk",
+        nextScene: "maint_hallway"
+      },
+      {
+        text: "Inspect Control Panel",
+        nextScene: "maint_hallway"
+      },
+      {
+          text: "Enter <em>???</em> <strong>(Blocked)</strong>",
+          nextScene: "maint_hallway"
+      }
+    ]
+  },
 };
 
 // --------------------------------------------------
@@ -110,7 +244,7 @@ const scenes = {
 const sceneTitle = document.getElementById("scene-title");
 const sceneText = document.getElementById("scene-text");
 const choicesContainer = document.getElementById("choices-container");
-const characterName = document.getElementById("character-name");
+//const characterName = document.getElementById("character-name");
 
 // Then, we create a function to update the scene,
 function updateScene(sceneName) {
@@ -124,8 +258,8 @@ function updateScene(sceneName) {
   // Here, for each html element, you change the textContent to match
   // the appropriate text from the scene object
   sceneTitle.textContent = scene.title;
-  sceneText.textContent = scene.text;
-  characterName.textContent = scene.character;
+  sceneText.innerHTML = scene.text;
+ // characterName.textContent = scene.character;
 
   // Clear the old buttons before creating new ones
   choicesContainer.innerHTML = "";
@@ -134,7 +268,7 @@ function updateScene(sceneName) {
   scene.choices.forEach(function (choice) {
     const button = document.createElement("button");
 
-    button.textContent = choice.text;
+    button.innerHTML = choice.text;
 
     button.addEventListener("click", function () {
       if (choice.action) {
@@ -173,7 +307,7 @@ const healthDisplay = document.getElementById("health-display");
 // Create a function to update health 
 function updateHealth(amount) {
   health += amount;
-  healthDisplay.textContent = health;
+  healthDisplay.textContent = "HP: " + health + " / 100";
 }
 
 // This refreshes the health display
@@ -213,6 +347,22 @@ function unlockDoor() {
     updateScene("solution");
   } else {
     messageDisplay.textContent = "The door is locked.";
+  }
+}
+
+function maintHallway() {
+  if (inventory.includes("Keycard")) {
+    updateScene("solution");
+  } else {
+    sceneText.innerHTML = "This door requires a <u><em>Keycard</em></u>.";
+  }
+}
+
+function sodaVendor() {
+  if (inventory.includes("Coin")) {
+    pickUpItem("Soda");
+  } else {
+    sceneText.innerHTML = "This Machine requires a <u><em>Coin</em></u>.";
   }
 }
 

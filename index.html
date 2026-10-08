@@ -1,1 +1,108 @@
 <!-- Add your index page here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/index/ArGO Sciences Logo.png" />
+    <title>ArGO Industries Employment Interest Form</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: 0;
+            background-color: white;
+            color: black;
+        }
+        header {
+            text-align: left;
+            overflow: hidden;
+            padding: 5px;
+            padding-bottom: 1px;
+        }
+        header.a {
+            text-align: right;
+        }
+        h1 {
+            font-size: 45px;
+            text-align: center;
+            vertical-align: top;
+        }
+        p {
+            margin-left: 20%;
+            margin-right: 20%;
+            font-size:larger;
+        }
+        form {
+            text-align: center;
+        }
+        hr {
+            color: black;
+            margin-left: 20%;
+            margin-right: 20%;
+            overflow: visible;
+            text-align: center;
+            height: 4px;
+            padding-bottom: 10px;
+            border: none;
+            border-bottom: 1px solid;
+            margin-bottom: 2em;
+        }
+        .line_small {
+            margin-left: 30%;
+            margin-right: 30%;
+        }
+        .line_small::after {
+            background: white;
+            content: "⚛";
+            
+            position: relative;
+            font-size: 20px;
+        }
+        br {
+            line-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header style="padding: 0px">
+            <div style="text-align: left">
+                <h1 style="font-size:60px;">
+                <img class="logo" src="images/index/ArGO Sciences Logo.png" alt="ArGO Industries" style="text-align: left;" width="150px" height="150px">
+                <span style="vertical-align: 75%; color:#6d9eeb">Industries</span>
+                </h1>
+            </div>
+             <h1>
+               Employment Interest Form
+            </h1>
+    </header>
+<hr>
+    <body>
+        <p>Thank you for expressing your interest in employment at ArGo Industries' 
+            California Research and Development Facility. Please fill out this brief
+            form with the necessary information regarding your personal attributes, 
+            prior experience, education, and why you are interested in joining us.
+            We hope to see you on the team!
+        </p>
+    </body>
+    <hr class="line_small">
+    <form>
+        <h3>Personal Information</h3>
+        <div>
+        Legal Name:
+            <input type="text" name="fname" id="fname" required placeholder="First">
+            <input type="text" name="mname" id="mname" placeholder="Middle (Optional)">
+            <input type="text" name="lname" id="lname" required placeholder="Last">
+        </div>
+        <br>
+        <div>
+            Contact Information:
+            <input type="email" name="email_address" id="email_address" required placeholder="E-mail">
+            <input type="tel" name="phone" id="phone" placeholder="Cell Phone Number">
+        </div>
+    </form>
+
+    <footer>
+        <hr>
+    </footer>
+</body>
+</html>

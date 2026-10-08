@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>Mystery Game</title>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+    
+</head>
+<body>
+    <header>
+        <a href="" id="health" style="text-decoration: none; color:black;">HP: 100 / 100</a>
+        <div class="header-right ">
+            <a class="link" href="home">Home</a>
+        </div>
+        <br>
+        
+    </header>
+
+    <main>
+
+    
+    <section>
+        <div style="text-align: center; transform: translateY(-3em); image-rendering: pixelated; pointer-events: none;" draggable="false">
+            <section id="background">
+                <img id="background_image" draggable="false" src="images/placeholder/placeholder_room.png" alt="" width="768" height="416">
+                <img id="box" draggable="false" class="overlay" style="pointer-events: none; border-style: solid; border-width: 4px;" src="images/placeholder/placeholder_room_box.png" alt="" width="768" height="416">
+                <div id="sel1" style="transform: translate(-322px, -320px); pointer-events:all; image-rendering: pixelated;">
+                    <img id="background_select_1" draggable="false" class="overlay selectable" style="border-width: 4px;" src="images/placeholder/placeholder_room_vent.png" alt="" width="auto" height="auto">
+                </div>
+                <div id="sel2" style="transform: translate(-94px, -220px); pointer-events:all; image-rendering: pixelated;">
+                    <img id="background_select_2" draggable="false" class="overlay selectable" style="border-width: 4px;" src="images/placeholder/placeholder_room_poster.png" alt="" width="auto" height="auto">
+                </div>
+                <div id="sel3" style="transform: translate(124px, -168px); pointer-events:all; image-rendering: pixelated;">
+                    <img id="background_select_3" draggable="false" class="overlay selectable" style="border-width: 4px;" src="images/placeholder/placeholder_room_door.png" alt="" width="auto" height="auto">
+                </div>
+                <div id="sel4" style="transform: translate(332px, -232px); pointer-events:all; image-rendering: pixelated;">
+                    <img id="background_select_4" draggable="false" class="overlay selectable" style="border-width: 4px;" src="images/placeholder/placeholder_room_window.png" alt="" width="auto" height="auto">
+                </div>
+            </section>
+            <div id="inspect" style="transform: translate(0, -100); image-rendering: pixelated;">
+                <img id="foreground_inspect" draggable="false" class="overlay" style="border-width: 4px;" src="images/placeholder/placeholder_room_poster_inspect.png" alt="" width="auto" height="auto" hidden>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div id="choices-container" style="text-align: center; transform: translateY(-1em);"> </div>
+    </section>   
+        
+    </main>
+    <footer>
+        <section id="inventory" class="row" style="margin-left:5%">
+            <div class="column">
+                <img draggable="false" id="chara_sprite" style="border-color: black; border-style: solid; border-width: 4px;" src="images/placeholder/placeholder_chara.png" alt="" width="120px" height="160px">
+            </div>
+            <div class="column item_slot">
+                <img id="item1" draggable="false" class="item" src="images/placeholder/placeholder_no_item.png" alt="No Item" style="width:120px">
+            </div>
+            <div class="column item_slot">
+                <img id="item2" draggable="false" class="item"src="images/placeholder/placeholder_no_item.png" alt="No Item" style="width:120px">
+            </div>
+            <div class="column item_slot">
+                <img id="item3" draggable="false" class="no_item" src="images/placeholder/placeholder_no_item.png" alt="No Item" style="width:120px">
+            </div>
+            <div class="column item_slot">
+                <img id="item4" draggable="false" class="no_item" src="images/placeholder/placeholder_no_item.png" alt="No Item" style="width:120px">
+            </div>
+        </section>
+
+        <div id="inspect_box" class="inspect_box">
+            <span id="scene-title"style="font-size: x-large; font-weight: bold;">Inspected Object/Item/Environment</span>
+            <br>
+            
+            <span id="scene-text">Object/Item/Environment Description</span>
+        </div>
+    </footer>
+</body>
+</html>
