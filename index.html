@@ -5,99 +5,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="images/index/ArGO Sciences Logo.png" />
-    <title>ArGO Industries Employment Interest Form</title>
-    <style>
-        body {
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            margin: 0;
-            background-color: white;
-            color: black;
-        }
-        header {
-            text-align: left;
-            overflow: hidden;
-            padding: 5px;
-            padding-bottom: 1px;
-        }
-        header.a {
-            text-align: right;
-        }
-        h1 {
-            font-size: 45px;
-            text-align: center;
-            vertical-align: top;
-        }
-        p {
-            margin-left: 20%;
-            margin-right: 20%;
-            font-size:larger;
-        }
-        form {
-            text-align: center;
-        }
-        hr {
-            color: black;
-            margin-left: 20%;
-            margin-right: 20%;
-            overflow: visible;
-            text-align: center;
-            height: 4px;
-            padding-bottom: 10px;
-            border: none;
-            border-bottom: 1px solid;
-            margin-bottom: 2em;
-        }
-        .line_small {
-            margin-left: 30%;
-            margin-right: 30%;
-        }
-        .line_small::after {
-            background: white;
-            content: "⚛";
-            
-            position: relative;
-            font-size: 20px;
-        }
-        br {
-            line-height: 20px;
-        }
-    </style>
+    <title>ArGO Industries Employmee Lateness Form</title>
+    <link rel="stylesheet" href="info.css">
 </head>
 <body>
-    <header style="padding: 0px">
+    <header style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+        <a href="index.html" class="disabled_button">Home Page</a>
+        <a href="about.html">About the Author</a>
+    </header>
+
+    <hr style="border-bottom: 16px ridge black; width: 100%; margin:0px; height: 0px; padding: 0px;">
+
+    <section style="background-color: black; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+        <div style="height: 15vh"></div>
+        <article>
+            <h3>Overview</h3>
+            The ArGO Industries California Research and Development Facility, like all joint scientific-industrial complexes do,
+            prides itself in its safe and OSHA-regulation compliant work environment. Lately, however, reports of a strange odor
+            coming from the vents have begun to become more and more previlant. Even the facility's Administrative Branch, clearly
+            the most important employees on site, have started to become concerned.
+            <br>
+            <br>
+            Unfortunately for you, you find yourself a whole thirty minutes late for work. This, of course, is the perfect
+            excuse for your Supervisor to send you on an investigation to discover the source of the disgusting fumes
+            slowly seeping their way into the Research Sector.
+            <br>
+            <br>
+            After you fill out some corporate paperwork explaining why you were late, naturally.
+        </article>
+        <div style="height: 20vh"></div>
+    </section>
+
+    <hr style="border-bottom: 16px groove #000000; width: 100%; margin:0px; height: 0px; padding: 0px;">
+
+    <section style="padding: 0px">
             <div style="text-align: left">
                 <h1 style="font-size:60px;">
                 <img class="logo" src="images/index/ArGO Sciences Logo.png" alt="ArGO Industries" style="text-align: left;" width="150px" height="150px">
                 <span style="vertical-align: 75%; color:#6d9eeb">Industries</span>
                 </h1>
             </div>
-             <h1>
-               Employment Interest Form
+                <h1>
+                Employee Lateness Form
             </h1>
-    </header>
-<hr>
+    </section>
+    <hr>
     <body>
-        <p>Thank you for expressing your interest in employment at ArGo Industries' 
-            California Research and Development Facility. Please fill out this brief
-            form with the necessary information regarding your personal attributes, 
-            prior experience, education, and why you are interested in joining us.
-            We hope to see you on the team!
+        <p>
+            ArGO Industries is committed to maintaining a productive and efficient work environment. 
+            We understand that unforeseen circumstances may arise, which may result in employees being temporarily absent from worktime. 
+            This form is designed to document instances of lateness and ensure that the company can continue to operate effectively.
+            Thank you for reporting your lateness and ensuring the company continues to function smoothly.
         </p>
     </body>
     <hr class="line_small">
-    <form>
+    <form action="game.html" method="get">
         <h3>Personal Information</h3>
         <div>
-        Legal Name:
+            <label for="fname">Legal Name:</label>
             <input type="text" name="fname" id="fname" required placeholder="First">
             <input type="text" name="mname" id="mname" placeholder="Middle (Optional)">
             <input type="text" name="lname" id="lname" required placeholder="Last">
         </div>
         <br>
         <div>
-            Contact Information:
-            <input type="email" name="email_address" id="email_address" required placeholder="E-mail">
-            <input type="tel" name="phone" id="phone" placeholder="Cell Phone Number">
+            <label for="id">Employee ID:</label>
+            <input type="number" name="id" id="id" placeholder="Ex. 1234" required>
+        </div>
+        <hr class="line_small">
+        <h3>Absence Information</h3>
+        <div>
+            <label for="arrival_date">Date of occurrence:</label>
+            <input type="date" name="arrival_date" id="arrival_date" required>
+        </div>
+            <br>
+        <div>
+            <label for="arrival_time">At what time did you arrive late?</label>
+            <input type="time" name="arrival_time" id="arrival_time" required>
+            <br>
+        </div>
+
+        <br>
+        <div>
+            <label for="reason">Reason for lateness:</label>
+            <select id="reason" name="reason" required>
+                <option value="transportation">Transportation Issues</option>
+                <option value="family">Family Emergency</option>
+                <option value="medical">Medical Emergency</option>
+                <option value="personal">Personal Reasons</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <hr class="line_small">
+        <h3>Employee Remarks</h3>
+        <div>
+            Do you intend to register for overtime to make up for this occurence?
+            <br>
+            <input type="radio" name="overtime" id="overtime" value="yes">
+            <label for="overtime_yes">Yes</label>
+            <input type="radio" name="overtime" id="overtime" value="no">
+            <label for="overtime_no">No</label>
+            <input type="radio" name="overtime" id="overtime" value="perchance">
+            <label for="overtime_perchance">Potentially</label>
+        </div>
+        <br>
+        <div>
+            <label for="notes">Do you have any further remarks or information to add?</label>
+            <br>
+            <br>
+            <textarea name="notes" id="notes" rows="5" cols="50" placeholder="Please provide any additional remarks or information here..."></textarea></div>
+        </div>
+        <hr class="line_small">
+        <div>
+            <input type="submit" value="Register Lateness Occurence">
+            <h6 style="font-size: 6px; color: #666666; margin-left: 30%; margin-right: 30%">By submitting this form, you acknowledge that the information provided is accurate
+             and truthful to the best of your knowledge. Any false information may result in disciplinary action. 
+             All information submitted will be registered in the ArGO Industries Employee Logistics System and 
+             relayed to your supervisor.</h6>
         </div>
     </form>
 
