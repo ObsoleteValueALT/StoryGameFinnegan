@@ -70,11 +70,12 @@ img {
     cursor: pointer;
 }
 
+
 .selectable {
     opacity: 0;
     cursor: help;
 }
-
+/*
 .selectable:hover {
     opacity: 1;
 }
@@ -85,6 +86,7 @@ img {
     border-radius: 8px;
     cursor: auto;
 }
+*/
 
 header {
     overflow: hidden;

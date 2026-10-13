@@ -11,6 +11,10 @@
 
 // First, we create a variable for the current scene being displayed
 let currentScene = "main_hallway";
+let inspecting = "scene";
+
+let globalSceneTitle = "";
+let globalSceneText = "";
 
 // Then, we create an object that stores the data for each scene,
 const scenes = {
@@ -94,7 +98,7 @@ const scenes = {
   main_hallway: {
     title: "Location: Main Hallway",
     character: "Objective: Search for your Supervisor",
-    text: "",
+    text: "Test",
     // you can choose how many choices to include
     // each choice can have text, an action, and/or nextScene
     choices: [
@@ -104,7 +108,9 @@ const scenes = {
       },
       {
         text: "Enter Maintainance Hallway <strong>(Locked)</strong>",
-        action: maintHallway
+        action: maintHallway,
+        hover: maintDoorHover,
+        mouseOut: maintDoorOut
       },
       {
           text: "Enter General Offices",
@@ -248,18 +254,22 @@ const choicesContainer = document.getElementById("choices-container");
 
 // Then, we create a function to update the scene,
 function updateScene(sceneName) {
-
   //This update the variable currentScene with the new scene passed as a parameter
   currentScene = sceneName;
 
   //This accesses the scene object based on the scene name
   const scene = scenes[sceneName];
 
-  // Here, for each html element, you change the textContent to match
-  // the appropriate text from the scene object
-  sceneTitle.textContent = scene.title;
-  sceneText.innerHTML = scene.text;
- // characterName.textContent = scene.character;
+  if (inspecting == "scene") {
+    globalSceneTitle = scene.title;
+    globalSceneText = scene.text;
+  }
+
+    // Here, for each html element, you change the textContent to match
+    // the appropriate text from the scene object
+    sceneTitle.innerHTML = globalSceneTitle;
+    sceneText.innerHTML = globalSceneText;
+  // characterName.textContent = scene.character;
 
   // Clear the old buttons before creating new ones
   choicesContainer.innerHTML = "";
@@ -276,7 +286,21 @@ function updateScene(sceneName) {
       }
 
       if (choice.nextScene) {
+        inspecting = "scene";
         updateScene(choice.nextScene);
+        
+      }
+    });
+
+    button.addEventListener("mouseover", function () {
+      if (choice.hover) {
+        choice.hover();
+      }
+    });
+
+    button.addEventListener("mouseout", function () {
+      if (choice.mouseOut) {
+        choice.mouseOut();
       }
     });
 
@@ -302,12 +326,12 @@ updateScene(currentScene);
 let health = 100;
 
 // Display current health
-const healthDisplay = document.getElementById("health-display");
+const healthDisplay = document.getElementById("health");
 
 // Create a function to update health 
 function updateHealth(amount) {
   health += amount;
-  healthDisplay.textContent = "HP: " + health + " / 100";
+  healthDisplay.innerHTML = "HP: " + health + " / 100";
 }
 
 // This refreshes the health display
@@ -351,11 +375,14 @@ function unlockDoor() {
 }
 
 function maintHallway() {
+  inspecting = "maintHallway";
+  globalSceneTitle = "Inspecting: Maintainance Hallway Entrance"
   if (inventory.includes("Keycard")) {
     updateScene("solution");
   } else {
-    sceneText.innerHTML = "This door requires a <u><em>Keycard</em></u>.";
+    globalSceneText = "This door requires a <u><em>Keycard</em></u>.";
   }
+  updateScene(currentScene);
 }
 
 function sodaVendor() {
@@ -364,5 +391,13 @@ function sodaVendor() {
   } else {
     sceneText.innerHTML = "This Machine requires a <u><em>Coin</em></u>.";
   }
+}
+
+function maintDoorHover() {
+  document.getElementById("background_select_3").style.opacity = 1;
+}
+
+function maintDoorOut() {
+  document.getElementById("background_select_3").style.opacity = 0;
 }
 
