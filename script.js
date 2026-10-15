@@ -104,19 +104,24 @@ const scenes = {
     choices: [
       {
         text: "Enter Break Room",
-        nextScene: "break_room"
+        nextScene: "break_room",
+        hover: broomDoorHover,
+        mouseOut: genOfficesOut
       },
       {
-        text: "Enter Maintainance Hallway <strong>(Locked)</strong>",
+        text: "Enter Maintenance Hallway <strong>(Locked)</strong>",
         action: maintHallway,
         hover: maintDoorHover,
-        mouseOut: maintDoorOut
+        mouseOut: genOfficesOut
       },
       {
           text: "Enter General Offices",
-          nextScene: "general_offices"
+          nextScene: "general_offices",
+          hover: genofficesDoorHover,
+        mouseOut: genOfficesOut
       }
-    ]
+    ],
+    background: "images/placeholder/main_hall_room_placeholder.png"
   },
 
   general_offices: {
@@ -134,7 +139,7 @@ const scenes = {
       },
       {
           text: "Speak to <em>Intern</em>",
-          nextScene: "main_hallway"
+          action: internGiveCoin
       }
     ]
   },
@@ -146,21 +151,29 @@ const scenes = {
     choices: [
       {
         text: "Use <em>Vending Machine</em>",
-        nextScene: "main_hallway"
+        action: sodaVendor,
+        hover: vendingMachineHover,
+        mouseOut: broomOut
       },
       {
         text: "Exit",
-        nextScene: "main_hallway"
+        nextScene: "main_hallway",
+        hover: breakRoomExitDoorHover,
+        mouseOut: broomOut
+        
       },
       {
           text: "Speak to <em>Jameson</em>",
-          nextScene: "main_hallway"
+          action: securityLendKeycard,
+        hover: broomTableHover,
+        mouseOut: broomOut
       }
-    ]
+    ],
+    background: "images/placeholder/break_room_placeholder.png"
   },
 
   maint_hallway: {
-    title: "Location: Maintainance Hallway",
+    title: "Location: Maintenance Hallway",
     character: "Objective: Search for your Supervisor",
     text: "",
     choices: [
@@ -232,6 +245,24 @@ const scenes = {
   },
 };
 
+const items = {
+  keycard: {
+    name: "Keycard",
+    desc: "An ArGO Facilities Level-III Employee Clearance Keycard.",
+    icon: "images/placeholder/placeholder_item_cheese.png"
+  },
+  soda: {
+    name: "Soda",
+    desc: "A delicious soft drink.",
+    icon: "images/placeholder/placeholder_item_soda.png"
+  },
+  coin: {
+    name: "Coin",
+    desc: "A shiny coin valued at 1 whole dollar!.",
+    icon: "images/placeholder/placeholder_item_coin.png"
+  }
+}
+
 // --------------------------------------------------
 // UPDATE SCENES
 // Read through the comments below to see what this section does
@@ -263,6 +294,10 @@ function updateScene(sceneName) {
   if (inspecting == "scene") {
     globalSceneTitle = scene.title;
     globalSceneText = scene.text;
+  }
+
+  if (scene.background) {
+    document.getElementById("background_image").src = scene.background;
   }
 
     // Here, for each html element, you change the textContent to match
@@ -356,8 +391,35 @@ function pickUpItem(itemName) {
     // Add itemName to the inventory array
     // Show the updated inventory on the page
   inventory.push(itemName);
-  inventoryDisplay.textContent = inventory.join(", ");
+  //inventoryDisplay.textContent = inventory.join(", ");
+  updateInventory();
 }
+
+function removeItem(itemName) {
+    // Add itemName to the inventory array
+    // Show the updated inventory on the page
+  var index = inventory.indexOf(itemName);
+  if (index > -1) {
+    inventory.splice(index, 1);
+  }
+  //inventoryDisplay.textContent = inventory.join(", ");
+  updateInventory();
+}
+
+function updateInventory() {
+  for (var i = 1; i <= 4; i++) {
+    document.getElementById("item" + (i)).src = "images/placeholder/placeholder_no_item.png"
+  }
+
+  inventory.forEach((i, index) => {
+    var item = items[i];
+    document.getElementById("item" + (index + 1)).src = item.icon;
+    
+  });
+  console.log(inventory);
+}
+
+updateInventory();
 
 // --------------------------------------------------
 // CONDITIONAL 
@@ -376,28 +438,85 @@ function unlockDoor() {
 
 function maintHallway() {
   inspecting = "maintHallway";
-  globalSceneTitle = "Inspecting: Maintainance Hallway Entrance"
-  if (inventory.includes("Keycard")) {
-    updateScene("solution");
+  globalSceneTitle = "Inspecting: Maintenance Hallway Entrance"
+  if (inventory.includes("keycard")) {
+    updateScene("maint_hallway");
   } else {
     globalSceneText = "This door requires a <u><em>Keycard</em></u>.";
   }
   updateScene(currentScene);
 }
 
-function sodaVendor() {
-  if (inventory.includes("Coin")) {
-    pickUpItem("Soda");
-  } else {
-    sceneText.innerHTML = "This Machine requires a <u><em>Coin</em></u>.";
+function internGiveCoin() {
+  inspecting = "intern";
+  globalSceneTitle = "Speaking: Roland, <em>Intern</em>"
+  if (!inventory.includes("coin")) {
+    pickUpItem("coin");
+    globalSceneText = "\"Have this delicious <u><em>Coin</em></u>. So. Tasty!\"";
   }
+  else {
+    globalSceneText = "\"I think you've had enough.\"";
+  }
+  updateScene(currentScene);
+}
+
+function sodaVendor() {
+  inspecting = "sodaMachine";
+  globalSceneTitle = "Inspecting: Commercial Vending Machine"
+  if (inventory.includes("coin")) {
+    removeItem("coin");
+    globalSceneText = "The Machine dispensed a <u><em>Soda</em></u>.";
+    pickUpItem("soda");
+    
+  } else {
+    globalSceneText = "This Machine requires a <u><em>Coin</em></u>.";
+  }
+  updateScene(currentScene);
+}
+
+function securityLendKeycard() {
+  inspecting = "sodaMachine";
+  globalSceneTitle = "Speaking: Liam Jameson, <em>Security Officer Second Class</em>"
+  if (inventory.includes("soda")) {
+    globalSceneText = "\"Just what the doctor ordered. Have my <u><em>Keycard</em></u>.\"";
+    pickUpItem("keycard");
+    removeItem("soda");
+  } else {
+    globalSceneText = "\"You get me a <u><em>Soda</em></u>, I'll lend you my <u><em>Keycard</em></u>.\"";
+  }
+  updateScene(currentScene);
 }
 
 function maintDoorHover() {
-  document.getElementById("background_select_3").style.opacity = 1;
+  document.getElementById("background_image").src = "images/placeholder/main_hall_room_sel_maint.png";
 }
 
-function maintDoorOut() {
-  document.getElementById("background_select_3").style.opacity = 0;
+function broomDoorHover() {
+  document.getElementById("background_image").src = "images/placeholder/main_hall_room_sel_broom.png";
 }
+
+function genofficesDoorHover() {
+  document.getElementById("background_image").src = "images/placeholder/main_hall_room_sel_genoffices.png";
+}
+
+function genOfficesOut() {
+  document.getElementById("background_image").src = scenes[currentScene].background;
+}
+
+function breakRoomExitDoorHover() {
+  document.getElementById("background_image").src = "images/placeholder/break_room_placeholder_sel_door.png";
+}
+
+function vendingMachineHover() {
+  document.getElementById("background_image").src = "images/placeholder/break_room_placeholder_sel_vend.png";
+}
+
+function broomTableHover() {
+  document.getElementById("background_image").src = "images/placeholder/break_room_placeholder_sel_table.png";
+}
+
+function broomOut() {
+  document.getElementById("background_image").src = scenes[currentScene].background;
+}
+
 
