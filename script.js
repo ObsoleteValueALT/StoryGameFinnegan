@@ -16,85 +16,13 @@ let inspecting = "scene";
 let globalSceneTitle = "";
 let globalSceneText = "";
 
+let bulletinBoardInspected = false;
+let dumpEntranceBlocked = true;
+let fumeSourceIdentified = false;
+let lastDamageSource = "Unknown";
+
 // Then, we create an object that stores the data for each scene,
 const scenes = {
-  // See "backyard" for the first example
-  backyard: {
-    title: "Location: Backyard",
-    character: "Interviewee:Grandma",
-    text: "Text: well what I remember happening is that Darcie went inside to play with her pretend kitchen, I heard her neighbor mention he was really hungry, and the dog ran around really quickly",
-    // you can choose how many choices to include
-    // each choice can have text, an action, and/or nextScene
-    choices: [
-      {
-        text: "Chase after the dog (-10 HP)",
-        action: function () {
-          updateHealth(-10);
-        },
-        nextScene: "entrance"
-      },
-      {
-        text: "Ask about the neighbor",
-        nextScene: "hallway"
-      },
-      {
-          text: "Pick up the brass key",
-          action: function () {
-            pickUpItem("brass key");
-          },
-          nextScene: "hallway"
-      }
-    ]
-  },
-
-  entrance: {
-    title: "Location: Entrance",
-    character: "Interviewee:Neighbor",
-    text: "well what I remember...",
-    choices: [
-      {
-        text: "Ask about the dog",
-        nextScene: "backyard"
-      },
-         {
-        text: "Ask about the neighbor",
-        nextScene: "hallway"
-      }
-    ]
-  },
-
-  hallway: {
-    title: "The Hallway",
-    text: "The hallway is dark and silent.",
-    choices: [
-      {
-        text: "backyard",
-        nextScene: "lockedDoor"
-      }
-    ]
-  },
-
-   lockedDoor: {
-    title: "The Locked Door",
-    text: "The door handle doesn't move.",
-    choices: [
-      {
-        text: "Try to open it",
-        action: unlockDoor
-      },
-      {
-        text: "Go back",
-        nextScene: "backyard"
-      }
-    ]
-  },
-
-   solution: {
-    title: "The solution",
-    text: "You solved the mystery!",
-    
-  },
-
   main_hallway: {
     title: "Location: Main Hallway",
     character: "Objective: Search for your Supervisor",
@@ -187,7 +115,7 @@ const scenes = {
       },
       {
         text: "Inspect Bulletin Board",
-        nextScene: "maint_hallway"
+        action: bulletinBoardInspect
       },
       {
           text: "Enter Industrial Processing <strong>(Locked)</strong>",
@@ -207,11 +135,11 @@ const scenes = {
       },
       {
         text: "Inspect Upper Drawer",
-        nextScene: "maint_hallway"
+        action: unlockedDrawer
       },
       {
         text: "Inspect Lower Drawer",
-        nextScene: "maint_hallway"
+        action: lockedDrawer
       },
       {
           text: "Inspect Electrical Panel",
@@ -241,15 +169,24 @@ const scenes = {
           text: "Enter <em>???</em> <strong>(Blocked)</strong>",
           nextScene: "maint_hallway"
       }
-    ]
+    ],
+    wasteDisposalSite: {
+      title: "Location: Fume Source<em>?</em>",
+
+    }
   },
+  death: {
+    title: "You have <strong>Died</strong>",
+    text: "Cause of Death: ",
+    background: "images/placeholder/placeholder_room_dead.png"
+  }
 };
 
 const items = {
   keycard: {
     name: "Keycard",
     desc: "An ArGO Facilities Level-III Employee Clearance Keycard.",
-    icon: "images/placeholder/placeholder_item_cheese.png"
+    icon: "images/placeholder/placeholder_item_keycard.png"
   },
   soda: {
     name: "Soda",
@@ -260,6 +197,16 @@ const items = {
     name: "Coin",
     desc: "A shiny coin valued at 1 whole dollar!.",
     icon: "images/placeholder/placeholder_item_coin.png"
+  },
+  padlock_key: {
+    name: "Padlock Key",
+    desc: "A regular-looking key.",
+    icon: "images/placeholder/placeholder_item_key.png"
+  },
+  screwdriver: {
+    name: "Padlock Key",
+    desc: "A regular-looking screwdriver.",
+    icon: "images/placeholder/placeholder_item_screwdriver.png"
   }
 }
 
@@ -364,13 +311,26 @@ let health = 100;
 const healthDisplay = document.getElementById("health");
 
 // Create a function to update health 
-function updateHealth(amount) {
-  health += amount;
+function updateHealth() {
   healthDisplay.innerHTML = "HP: " + health + " / 100";
+  if (health <= 0) {
+    inspecting = "afterlife";
+    
+    globalSceneTitle = "You have <em>Died</em>"
+    globalSceneText = "Cause of Death: " + lastDamageSource;
+    updateScene("death");
+  }
+}
+
+function takeDamage(dmg, src) {
+  health -= dmg;
+  lastDamageSource = src;
+  updateHealth();
+  document.getElementById("updates").innerHTML = "Took " + dmg + " damage<br>from " + src + "."
 }
 
 // This refreshes the health display
-updateHealth(0);
+updateHealth();
 
 // --------------------------------------------------
 // INVENTORY
@@ -436,6 +396,25 @@ function unlockDoor() {
   }
 }
 
+function bulletinBoardInspect() {
+  inspecting = "bulletinBoard";
+  globalSceneTitle = "Inspecting: Bulletin Board"
+  if (bulletinBoardInspected) {
+    if (inventory.includes("padlock_key")) {
+      globalSceneText = "Nothing useful on the shelf."
+    }
+    else {
+      globalSceneText = "Got <u><em>Padlock Key</em></u> from <em>Hidden Shelf</em>.";
+      pickUpItem("padlock_key");
+    }
+  } else {
+    globalSceneText = "You discover a <em>Hidden Shelf</em> behind this inconspicious Bulletin Board!.";
+    bulletinBoardInspected = true;
+
+  }
+  updateScene(currentScene);
+}
+
 function maintHallway() {
   inspecting = "maintHallway";
   globalSceneTitle = "Inspecting: Maintenance Hallway Entrance"
@@ -443,6 +422,17 @@ function maintHallway() {
     updateScene("maint_hallway");
   } else {
     globalSceneText = "This door requires a <u><em>Keycard</em></u>.";
+  }
+  updateScene(currentScene);
+}
+
+function industrialProcessingDoor() {
+  inspecting = "industrialProcessing";
+  globalSceneTitle = "Inspecting: Industrial Processing Division Entrance"
+  if (inventory.includes("padlock_key")) {
+    updateScene("processing");
+  } else {
+    globalSceneText = "This door requires a <u><em>Key</em></u>.";
   }
   updateScene(currentScene);
 }
@@ -483,6 +473,35 @@ function securityLendKeycard() {
     removeItem("soda");
   } else {
     globalSceneText = "\"You get me a <u><em>Soda</em></u>, I'll lend you my <u><em>Keycard</em></u>.\"";
+  }
+  updateScene(currentScene);
+}
+
+function unlockedDrawer() {
+  inspecting = "unlockedDrawer";
+  globalSceneTitle = "Inspecting: Storage Cart, Upper Drawer"
+  if (!inventory.includes("screwdriver")) {
+    globalSceneText = "There is a <u><em>Screwdriver</em></u> in the Drawer. You take it.";
+    pickUpItem("screwdriver");
+  } else {
+    globalSceneText = "This Drawer is empty.";
+  }
+  updateScene(currentScene);
+}
+
+function electricalPanel() {
+  inspecting = "electricalPanel";
+  globalSceneTitle = "Inspecting: Model HV-5400 Electrical Access Panel";
+}
+
+function lockedDrawer() {
+  inspecting = "lockedDrawer";
+  globalSceneTitle = "Inspecting: Storage Cart, Lower Drawer"
+  if (inventory.includes("passcode")) {
+    globalSceneText = "There is some sort of <u><em>Control Panel</em></u> in the Drawer. You take it.";
+    pickUpItem("control_panel");
+  } else {
+    globalSceneText = "This Drawer is locked with a <u><em>Code</em></u>.";
   }
   updateScene(currentScene);
 }
