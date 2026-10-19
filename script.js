@@ -81,7 +81,7 @@ const scenes = {
         action: supervisorQuestion
       },
       {
-        text: "Exit",
+        text: "<strong>⬐</strong> Exit",
         nextScene: "main_hallway"
       },
       {
@@ -158,7 +158,7 @@ const scenes = {
           },
       },
       {
-        text: "Exit",
+        text: "<strong>⬐</strong> Exit",
         nextScene: "main_hallway"
       },
       {
@@ -212,10 +212,10 @@ const scenes = {
     text: "Storage closet of some kind.",
     choices: [
       {
-        text: "Exit",
+        text: "<strong>⬐</strong> Exit",
         nextScene: "maint_hallway",
           hover: function() {
-            adjustBackgroundTemp("images/placeholder/storage_room_placeholder_sel_lazy_excuse_for_exiting.png")
+            //adjustBackgroundTemp("images/placeholder/storage_room_placeholder_sel_lazy_excuse_for_exiting.png")
           },
           mouseOut: function() {
             adjustBackgroundTemp("images/placeholder/storage_room_placeholder.png")
@@ -269,30 +269,97 @@ const scenes = {
     title: "Location: Industrial Processing",
     character: "Objective: Search for your Supervisor",
     text: "Industrial Processing Room. There's several pieces of equipment here you don't recognize.",
+    background: "images/placeholder/indproc_placeholder.png",
     choices: [
       {
-        text: "Exit",
+        text: "<strong>⬐</strong> Exit",
         nextScene: "maint_hallway",
         action: function() {
-            if (!bulletinBoardInspected) {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
-            }
-            else {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
-            }
-          },
-      },
-      {
-        text: "Inspect Desk",
-        action: openCodeDesk
+          if (!bulletinBoardInspected) {
+            adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+          }
+          else {
+            adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+          }
+        }
       },
       {
         text: "Inspect Control Panel",
-        action: ctrlPanel
+        action: ctrlPanel,
+        hover: function() {
+          if (!dumpEntranceBlocked) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_door_sel_panel.png")
+          }
+          else if (controlPanelRepaired) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_panel_sel_panel.png")
+          }
+          else {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_sel_panel.png")
+          }
+        },
+        mouseOut: function() {
+          if (!dumpEntranceBlocked) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_door.png")
+          }
+          else if (controlPanelRepaired) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_panel.png")
+          }
+          else {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder.png")
+          }
+        },
       },
       {
           text: "Enter <em>???</em> <strong>(Blocked)</strong>",
-          action: dumpZone
+          action: dumpZone,
+        hover: function() {
+          if (!dumpEntranceBlocked) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_door_sel_door.png")
+          }
+          else if (controlPanelRepaired) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_panel_sel_door_blocked.png")
+          }
+          else {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_sel_door_blocked.png")
+          }
+        },
+        mouseOut: function() {
+          if (!dumpEntranceBlocked) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_door.png")
+          }
+          else if (controlPanelRepaired) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_panel.png")
+          }
+          else {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder.png")
+          }
+        },
+      },
+      {
+        text: "Inspect Desk",
+        action: openCodeDesk,
+        hover: function() {
+          if (!dumpEntranceBlocked) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_door_sel_desk.png")
+          }
+          else if (controlPanelRepaired) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_panel_sel_desk.png")
+          }
+          else {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_sel_desk.png")
+          }
+        },
+        mouseOut: function() {
+          if (!dumpEntranceBlocked) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_door.png")
+          }
+          else if (controlPanelRepaired) {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder_panel.png")
+          }
+          else {
+            adjustBackgroundTemp("images/placeholder/indproc_placeholder.png")
+          }
+        },
       }
     ],
     
