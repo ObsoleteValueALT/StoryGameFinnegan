@@ -21,32 +21,51 @@ let dumpEntranceBlocked = true;
 let fumeSourceIdentified = false;
 let lastDamageSource = "Unknown";
 
+let electricalPanelStatus = 1;
+
+let drawerUnlocked = false;
+let industrialProcessingUnlocked = false;
+
+let controlPanelRepaired = false;
+
 // Then, we create an object that stores the data for each scene,
 const scenes = {
   main_hallway: {
     title: "Location: Main Hallway",
     character: "Objective: Search for your Supervisor",
-    text: "Test",
+    text: "Central hallway for the Research Sector.",
     // you can choose how many choices to include
     // each choice can have text, an action, and/or nextScene
     choices: [
       {
         text: "Enter Break Room",
         nextScene: "break_room",
-        hover: broomDoorHover,
-        mouseOut: genOfficesOut
+        hover: function() {
+          adjustBackgroundTemp("images/placeholder/main_hall_room_sel_broom.png")
+        },
+        mouseOut: function() {
+          adjustBackgroundTemp("images/placeholder/main_hall_room_placeholder.png")
+        },
       },
       {
-        text: "Enter Maintenance Hallway <strong>(Locked)</strong>",
+        text: "Enter Maintenance Hallway <strong>(Requires Keycard)</strong>",
         action: maintHallway,
-        hover: maintDoorHover,
-        mouseOut: genOfficesOut
+        hover: function() {
+          adjustBackgroundTemp("images/placeholder/main_hall_room_sel_maint.png")
+        },
+        mouseOut: function() {
+          adjustBackgroundTemp("images/placeholder/main_hall_room_placeholder.png")
+        },
       },
       {
           text: "Enter General Offices",
           nextScene: "general_offices",
-          hover: genofficesDoorHover,
-        mouseOut: genOfficesOut
+          hover: function() {
+          adjustBackgroundTemp("images/placeholder/main_hall_room_sel_genoffices.png")
+        },
+        mouseOut: function() {
+          adjustBackgroundTemp("images/placeholder/main_hall_room_placeholder.png")
+        },
       }
     ],
     background: "images/placeholder/main_hall_room_placeholder.png"
@@ -55,11 +74,11 @@ const scenes = {
   general_offices: {
     title: "Location: General Offices",
     character: "Objective: Search for your Supervisor",
-    text: "",
+    text: "General offices for the Research Sector.",
     choices: [
       {
         text: "Speak to <em>Supervisor</em>",
-        nextScene: "main_hallway"
+        action: supervisorQuestion
       },
       {
         text: "Exit",
@@ -75,26 +94,38 @@ const scenes = {
   break_room: {
     title: "Location: Break Room",
     character: "Objective: Search for your Supervisor",
-    text: "",
+    text: "Break room and public cafeteria. Security Officer Jameson is a regular, if you will.",
     choices: [
       {
         text: "Use <em>Vending Machine</em>",
         action: sodaVendor,
-        hover: vendingMachineHover,
-        mouseOut: broomOut
+        hover: function() {
+          adjustBackgroundTemp("images/placeholder/break_room_placeholder_sel_vend.png")
+        },
+        mouseOut: function() {
+          adjustBackgroundTemp("images/placeholder/break_room_placeholder.png")
+        },
       },
       {
         text: "Exit",
         nextScene: "main_hallway",
-        hover: breakRoomExitDoorHover,
-        mouseOut: broomOut
+        hover: function() {
+          adjustBackgroundTemp("images/placeholder/break_room_placeholder_sel_door.png")
+        },
+        mouseOut: function() {
+          adjustBackgroundTemp("images/placeholder/break_room_placeholder.png")
+        },
         
       },
       {
           text: "Speak to <em>Jameson</em>",
           action: securityLendKeycard,
-        hover: broomTableHover,
-        mouseOut: broomOut
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/break_room_placeholder_sel_table.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/break_room_placeholder.png")
+          },
       }
     ],
     background: "images/placeholder/break_room_placeholder.png"
@@ -103,11 +134,28 @@ const scenes = {
   maint_hallway: {
     title: "Location: Maintenance Hallway",
     character: "Objective: Search for your Supervisor",
-    text: "",
+    text: "Central hallway for the Industrial Sector.",
+    background: "images/placeholder/maint_hallway_placeholder.png",
     choices: [
       {
         text: "Enter Storage Room",
-        nextScene: "storage_room"
+        nextScene: "storage_room",
+          hover: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_storage.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel_storage.png")
+            }
+          },
+          mouseOut: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+            }
+          },
       },
       {
         text: "Exit",
@@ -115,66 +163,226 @@ const scenes = {
       },
       {
         text: "Inspect Bulletin Board",
-        action: bulletinBoardInspect
+        action: bulletinBoardInspect,
+        conditionals: btnConditionals_Board,
+          hover: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_board.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel.png")
+            }
+          },
+          mouseOut: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+            }
+          },
       },
       {
           text: "Enter Industrial Processing <strong>(Locked)</strong>",
-          nextScene: "main_hallway"
+          action: industrialProcessingDoor,
+          conditionals: btnConditionals_Processing,
+          hover: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_indproc.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel_indproc.png")
+            }
+          },
+          mouseOut: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+            }
+          },
       }
-    ]
+    ],
   },
 
   storage_room: {
     title: "Location: Storage Room",
     character: "Objective: Search for your Supervisor",
-    text: "",
+    text: "Storage closet of some kind.",
     choices: [
       {
         text: "Exit",
-        nextScene: "maint_hallway"
+        nextScene: "maint_hallway",
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder_sel_lazy_excuse_for_exiting.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder.png")
+          },
+        action: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+            }
+          },
       },
       {
         text: "Inspect Upper Drawer",
-        action: unlockedDrawer
+        action: unlockedDrawer,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder_sel_drawer_up.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder.png")
+          },
+        
       },
       {
         text: "Inspect Lower Drawer",
-        action: lockedDrawer
+        action: lockedDrawer,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder_sel_drawer_down.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder.png")
+          },
+          conditionals: btnConditionals_Drawer
       },
       {
           text: "Inspect Electrical Panel",
-          nextScene: "maint_hallway"
+          action: electricalPanel,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder_sel_box.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/storage_room_placeholder.png")
+          },
       }
-    ]
+    ],
+    background: "images/placeholder/storage_room_placeholder.png"
   },
 
   processing: {
     title: "Location: Industrial Processing",
     character: "Objective: Search for your Supervisor",
-    text: "",
+    text: "Industrial Processing Room. There's several pieces of equipment here you don't recognize.",
     choices: [
       {
         text: "Exit",
-        nextScene: "maint_hallway"
+        nextScene: "maint_hallway",
+        action: function() {
+            if (!bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            }
+            else {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+            }
+          },
       },
       {
         text: "Inspect Desk",
-        nextScene: "maint_hallway"
+        action: openCodeDesk
       },
       {
         text: "Inspect Control Panel",
-        nextScene: "maint_hallway"
+        action: ctrlPanel
       },
       {
           text: "Enter <em>???</em> <strong>(Blocked)</strong>",
-          nextScene: "maint_hallway"
+          action: dumpZone
       }
     ],
-    wasteDisposalSite: {
-      title: "Location: Fume Source<em>?</em>",
-
-    }
+    
   },
+  wasteDisposalSite: {
+      title: "Location: Fume Source<em>?</em>",
+      text: "You've found the source of the problem. It seems as if, this entire time, the corporation has been dumping this waste improperly to save money. They must have gone through some lengths to hide this, judging by the huge vat blocking this room and the electrical panel being tampered with.",
+      background: "images/placeholder/waste_site.png"
+    },
+  electricalPanelExamine_w1: {
+      title: "Inspecting: Model HV-5400 Electrical Access Panel",
+      background: "images/placeholder/electrical_panel_wires_w1.png",
+      text: "Seems someone has tampered with this electrical panel.",
+      choices: [
+        {
+          text: "Insert Wire into Leftmost Port",
+          action: electricalPanelReset,
+          hover: function() {
+          adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w1_1.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w1.png")
+          },
+        },
+        {
+          text: "Insert Wire into Center Port",
+          action: electricalPanelUpdateStatus,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w1_2.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w1.png")
+          },
+        },
+        {
+          text: "Insert Wire into Rightmost Port",
+          action: electricalPanelReset,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w1_3.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w1.png")
+          },
+        },
+      ]
+    },
+    electricalPanelExamine_w2: {
+      title: "Inspecting: Model HV-5400 Electrical Access Panel",
+      text: "One of three wires repaired.",
+      background: "images/placeholder/electrical_panel_wires_w2.png",
+      choices: [
+        {
+          text: "Insert Wire into Leftmost Port",
+          action: electricalPanelUpdateStatus,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w2_1.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w2.png")
+          },
+        },
+        {
+          text: "Insert Wire into Rightmost Port",
+          action: electricalPanelReset,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w2_2.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w2.png")
+          },
+        },
+      ]
+    },
+    electricalPanelExamine_w3: {
+      title: "Inspecting: Model HV-5400 Electrical Access Panel",
+      text: "Two of three wires repaired.",
+      background: "images/placeholder/electrical_panel_wires_w3.png",
+      choices: [
+        {
+          text: "Insert Wire into Rightmost Port",
+          action: electricalPanelSuccess,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w3_1.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/electrical_panel_wires_w3.png")
+          },
+        },
+      ]
+    },
   death: {
     title: "You have <strong>Died</strong>",
     text: "Cause of Death: ",
@@ -195,7 +403,7 @@ const items = {
   },
   coin: {
     name: "Coin",
-    desc: "A shiny coin valued at 1 whole dollar!.",
+    desc: "A shiny coin valued at 1 whole dollar!",
     icon: "images/placeholder/placeholder_item_coin.png"
   },
   padlock_key: {
@@ -207,6 +415,16 @@ const items = {
     name: "Padlock Key",
     desc: "A regular-looking screwdriver.",
     icon: "images/placeholder/placeholder_item_screwdriver.png"
+  },
+  passcode: {
+    name: "Numeric Passcode",
+    desc: "A scrap of paper with a code on it.",
+    icon: "images/placeholder/placeholder_item_passcode.png"
+  },
+  control_panel: {
+    name: "Industrial Processing Vat Control Panel",
+    desc: "The central control panel for the Industrial Processing Vat crane. For whatever reason, it's been unscrewed from its main pedestal.",
+    icon: "images/placeholder/placeholder_item_ctrl_panel.png"
   }
 }
 
@@ -261,6 +479,10 @@ function updateScene(sceneName) {
     const button = document.createElement("button");
 
     button.innerHTML = choice.text;
+
+    if (choice.conditionals) {
+        choice.conditionals(button);
+    }
 
     button.addEventListener("click", function () {
       if (choice.action) {
@@ -400,7 +622,7 @@ function bulletinBoardInspect() {
   inspecting = "bulletinBoard";
   globalSceneTitle = "Inspecting: Bulletin Board"
   if (bulletinBoardInspected) {
-    if (inventory.includes("padlock_key")) {
+    if (inventory.includes("padlock_key") || industrialProcessingUnlocked) {
       globalSceneText = "Nothing useful on the shelf."
     }
     else {
@@ -408,7 +630,7 @@ function bulletinBoardInspect() {
       pickUpItem("padlock_key");
     }
   } else {
-    globalSceneText = "You discover a <em>Hidden Shelf</em> behind this inconspicious Bulletin Board!.";
+    globalSceneText = "You discover a <em>Hidden Shelf</em> behind this inconspicious Bulletin Board!";
     bulletinBoardInspected = true;
 
   }
@@ -429,10 +651,36 @@ function maintHallway() {
 function industrialProcessingDoor() {
   inspecting = "industrialProcessing";
   globalSceneTitle = "Inspecting: Industrial Processing Division Entrance"
-  if (inventory.includes("padlock_key")) {
-    updateScene("processing");
-  } else {
-    globalSceneText = "This door requires a <u><em>Key</em></u>.";
+  if (!industrialProcessingUnlocked) {
+    if (inventory.includes("padlock_key")) {
+      industrialProcessingUnlocked = true;
+      if ( electricalPanelStatus == 4) {
+        updateScene("processing");
+        globalSceneText = "You unlock the door with the <u><em>Padlock Key</em></u>. You attempt to take it back, but it's jammed in the lock now.";
+        removeItem("padlock_key");
+        
+      }
+      else {
+        takeDamage(25, "Toxic Fumes");
+        globalSceneText = "You attempt to enter the unlocked room, but the fumes are so toxic you physical wretch as you open the door. Clearly the fume hoods lack power.";
+        removeItem("padlock_key");
+      }
+    } 
+    else {
+      globalSceneText = "This door requires a <u><em>Key</em></u>.";
+    }
+  }
+  else {
+    if ( electricalPanelStatus == 4) {
+        updateScene("processing");
+        globalSceneText = "You unlock the door with the <u><em>Padlock Key</em></u>. You attempt to take it back, but it's jammed in the lock now.";
+        removeItem("padlock_key");
+      }
+      else {
+        takeDamage(25, "Toxic Fumes");
+        removeItem("padlock_key");
+        globalSceneText = "You attempt to enter the unlocked room, but the fumes are so toxic you physical wretch as you open the door. Clearly the fume hoods lack power.";
+      }
   }
   updateScene(currentScene);
 }
@@ -440,12 +688,12 @@ function industrialProcessingDoor() {
 function internGiveCoin() {
   inspecting = "intern";
   globalSceneTitle = "Speaking: Roland, <em>Intern</em>"
-  if (!inventory.includes("coin")) {
+  if (!inventory.includes("coin") && !inventory.includes("soda") && !inventory.includes("keycard")) {
     pickUpItem("coin");
-    globalSceneText = "\"Have this delicious <u><em>Coin</em></u>. So. Tasty!\"";
+    globalSceneText = "\"Late today, huh? A little late for a coffee run, but, uh... here, have this <u><em>Coin</em></u>. Y'know.. for the vending machine!\"";
   }
   else {
-    globalSceneText = "\"I think you've had enough.\"";
+    globalSceneText = "\"Oh. Do you, uh.. need another coin? 'Cause that was my only one. Sorry.\"";
   }
   updateScene(currentScene);
 }
@@ -461,6 +709,13 @@ function sodaVendor() {
   } else {
     globalSceneText = "This Machine requires a <u><em>Coin</em></u>.";
   }
+  updateScene(currentScene);
+}
+
+function supervisorQuestion() {
+  inspecting = "the Big Boss";
+  globalSceneTitle = "Speaking: Jen Addison, <em>Division Supervisor</em>"
+    globalSceneText = "\"You know what your puni-.. assignment is, right? Go find the source of those fumes everyone seems to be complaining about.\"";
   updateScene(currentScene);
 }
 
@@ -491,51 +746,133 @@ function unlockedDrawer() {
 
 function electricalPanel() {
   inspecting = "electricalPanel";
-  globalSceneTitle = "Inspecting: Model HV-5400 Electrical Access Panel";
+  globalSceneTitle = "Inspecting: Model HV-5400 Electrical Access Panel"
+  if (electricalPanelStatus != 4) {
+    globalSceneText = "It appears to be intentionally broken.";
+    updateScene("electricalPanelExamine_w1");
+  } else {
+    globalSceneText = "You have already repaired this.";
+  }
+  updateScene(currentScene);
+}
+
+function electricalPanelSuccess() {
+  electricalPanelStatus = 4;
+  globalSceneText = "Some lights flicker in the Industrial Processing Room. Judging from the sound, it seems the fume hoods are back online.";
+  updateScene("storage_room");
+}
+
+function electricalPanelUpdateStatus() {
+  electricalPanelStatus+=1;
+  updateScene("electricalPanelExamine_w" + electricalPanelStatus);
+}
+
+function electricalPanelReset() {
+  takeDamage(15, "Shock");
+  electricalPanelStatus = 1;
+  updateScene("electricalPanelExamine_w1");
 }
 
 function lockedDrawer() {
   inspecting = "lockedDrawer";
   globalSceneTitle = "Inspecting: Storage Cart, Lower Drawer"
   if (inventory.includes("passcode")) {
-    globalSceneText = "There is some sort of <u><em>Control Panel</em></u> in the Drawer. You take it.";
-    pickUpItem("control_panel");
+    drawerUnlocked = true;
+    if (!controlPanelRepaired && !inventory.includes("control_panel")) {
+      globalSceneText = "There is some sort of <u><em>Control Panel</em></u> in the Drawer. You take it.";
+      pickUpItem("control_panel");
+    }
+    else {
+      globalSceneText = "This Drawer is empty.";
+    }
   } else {
     globalSceneText = "This Drawer is locked with a <u><em>Code</em></u>.";
   }
   updateScene(currentScene);
 }
 
-function maintDoorHover() {
-  document.getElementById("background_image").src = "images/placeholder/main_hall_room_sel_maint.png";
+function openCodeDesk() {
+  inspecting = "processingDesk";
+  globalSceneTitle = "Inspecting: Desk Drawer"
+  if (!inventory.includes("passcode")) {
+    globalSceneText = "There is some sort of <u><em>Code</em></u> in the Drawer. You take it.";
+    pickUpItem("passcode");
+  } else {
+    globalSceneText = "This Drawer is empty.";
+  }
+  updateScene(currentScene);
 }
 
-function broomDoorHover() {
-  document.getElementById("background_image").src = "images/placeholder/main_hall_room_sel_broom.png";
+function ctrlPanel() {
+  inspecting = "ctrlPanel";
+  globalSceneTitle = "Inspecting: Control Panel"
+  if (!controlPanelRepaired) {
+    if (inventory.includes("control_panel") && inventory.includes("screwdriver")) {
+      globalSceneText = "You reinstall the <u><em>Control Panel</em><u>.";
+      removeItem("control_panel");
+      controlPanelRepaired = true;
+    } 
+    else if (inventory.includes("control_panel")) {
+      globalSceneText = "You have nothing to screw the <u><em>Control Panel</em><u> in with.";
+    }
+    else if (inventory.includes("screwdriver")) {
+      globalSceneText = "Feels like you're missing something to screw in.";
+    }
+    else {
+      globalSceneText = "The Control Panel is missing... the Control Panel? Like, the entire front Panel?";
+    }
+  }
+  else {
+    globalSceneText = "You use the Control Panel to move the Vat out of the door's way."
+    dumpEntranceBlocked = false;
+  }
+  updateScene(currentScene);
 }
 
-function genofficesDoorHover() {
-  document.getElementById("background_image").src = "images/placeholder/main_hall_room_sel_genoffices.png";
+function dumpZone() {
+  inspecting = "wasteDisposalSite";
+  globalSceneTitle = "Inspecting <em>???</em>";
+  if (!dumpEntranceBlocked) {
+    globalSceneTitle = "Location: Fume Source<em>?</em>";
+    globalSceneText = "You've found the source of the problem. It seems as if, this entire time, the corporation has been dumping this waste improperly to save money. They must have gone through some lengths to hide this, judging by the huge vat blocking this room and the electrical panel being tampered with.",
+    updateScene("wasteDisposalSite");
+    adjustBackgroundTemp("images/placeholder/waste_site.png");
+  }
+  else {
+    globalSceneText = "There is a rather large industrial vat blocking this doorway."
+  }
+  updateScene(currentScene);
 }
 
-function genOfficesOut() {
-  document.getElementById("background_image").src = scenes[currentScene].background;
+function adjustBackgroundTemp(background) {
+  document.getElementById("background_image").src = background
 }
 
-function breakRoomExitDoorHover() {
-  document.getElementById("background_image").src = "images/placeholder/break_room_placeholder_sel_door.png";
+function btnConditionals_Processing(btn) {
+  if (industrialProcessingUnlocked) {
+    btn.innerHTML = "Enter Industrial Processing"
+  }
+  else { 
+    btn.innerHTML = "Enter Industrial Processing <em>(Requires Key)</em>"
+  }
 }
 
-function vendingMachineHover() {
-  document.getElementById("background_image").src = "images/placeholder/break_room_placeholder_sel_vend.png";
+function btnConditionals_Drawer(btn) {
+  if (drawerUnlocked) {
+    btn.innerHTML = "Inspect Lower Drawer"
+  }
+  else { 
+    btn.innerHTML = "Inspect Lower Drawer <em>(Requires Key)</em>"
+  }
 }
 
-function broomTableHover() {
-  document.getElementById("background_image").src = "images/placeholder/break_room_placeholder_sel_table.png";
-}
-
-function broomOut() {
-  document.getElementById("background_image").src = scenes[currentScene].background;
+function btnConditionals_Board(btn) {
+  if (bulletinBoardInspected) {
+    btn.innerHTML = "Inspect Hidden Shelf"
+  }
+  else { 
+    btn.innerHTML = "Inspect Bulletin Board"
+  }
 }
 
 
