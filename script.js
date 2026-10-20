@@ -13,6 +13,8 @@
 let currentScene = "main_hallway";
 let inspecting = "scene";
 
+let requiredItem;
+
 let globalSceneTitle = "";
 let globalSceneText = "";
 
@@ -52,9 +54,13 @@ const scenes = {
         action: maintHallway,
         hover: function() {
           adjustBackgroundTemp("images/placeholder/main_hall_room_sel_maint.png")
+          requiredItem = items.keycard;
+          updateInventory();
         },
         mouseOut: function() {
           adjustBackgroundTemp("images/placeholder/main_hall_room_placeholder.png")
+          requiredItem = null;
+          updateInventory();
         },
       },
       {
@@ -113,10 +119,14 @@ const scenes = {
         text: "Use <em>Vending Machine</em>",
         action: sodaVendor,
         hover: function() {
-          adjustBackgroundTemp("images/placeholder/break_room_placeholder_sel_vend.png")
+          adjustBackgroundTemp("images/placeholder/break_room_placeholder_sel_vend.png");
+          requiredItem = items.coin;
+          updateInventory();
         },
         mouseOut: function() {
-          adjustBackgroundTemp("images/placeholder/break_room_placeholder.png")
+          adjustBackgroundTemp("images/placeholder/break_room_placeholder.png");
+          requiredItem = items.none;
+          updateInventory();
         },
       },
       {
@@ -135,9 +145,13 @@ const scenes = {
           action: securityLendKeycard,
           hover: function() {
             adjustBackgroundTemp("images/placeholder/break_room_placeholder_sel_table.png")
+            requiredItem = items.soda;
+            updateInventory();
           },
           mouseOut: function() {
             adjustBackgroundTemp("images/placeholder/break_room_placeholder.png")
+            requiredItem = items.none;
+            updateInventory();
           },
       }
     ],
@@ -212,15 +226,21 @@ const scenes = {
           action: industrialProcessingDoor,
           conditionals: btnConditionals_Processing,
           hover: function() {
+            
             if (industrialProcessingUnlocked) {
               adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked_sel_indproc.png")
             }
             else if (bulletinBoardInspected) {
               adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel_indproc.png")
+              requiredItem = items.padlock_key;
+              updateInventory();
             }
             else {
               adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_indproc.png")
+              requiredItem = items.padlock_key;
+              updateInventory();
             }
+            
           },
           mouseOut: function() {
             if (industrialProcessingUnlocked) {
@@ -232,6 +252,8 @@ const scenes = {
             else {
               adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
             }
+            requiredItem = items.none;
+              updateInventory();
           },
       }
     ],
@@ -277,9 +299,13 @@ const scenes = {
         action: lockedDrawer,
           hover: function() {
             adjustBackgroundTemp("images/placeholder/storage_room_placeholder_sel_drawer_down.png")
+            requiredItem = items.passcode;
+              updateInventory();
           },
           mouseOut: function() {
             adjustBackgroundTemp("images/placeholder/storage_room_placeholder.png")
+            requiredItem = items.none;
+              updateInventory();
           },
           conditionals: btnConditionals_Drawer
       },
@@ -327,6 +353,8 @@ const scenes = {
           }
           else {
             adjustBackgroundTemp("images/placeholder/indproc_placeholder_sel_panel.png")
+            requiredItem = items.control_panel, items.screwdriver;
+            updateInventory();
           }
         },
         mouseOut: function() {
@@ -339,6 +367,8 @@ const scenes = {
           else {
             adjustBackgroundTemp("images/placeholder/indproc_placeholder.png")
           }
+          requiredItem = items.none;
+              updateInventory();
         },
       },
       {
@@ -532,6 +562,11 @@ const items = {
     name: "Industrial Processing Vat Control Panel",
     desc: "The central control panel for the Industrial Processing Vat crane. For whatever reason, it's been unscrewed from its main pedestal.",
     icon: "images/placeholder/placeholder_item_ctrl_panel.png"
+  },
+  none: {
+    name: "There's nothing there.",
+    desc: "There's nothing there.",
+    icon: "images/placeholder/placeholder.png"
   }
 }
 
@@ -713,12 +748,18 @@ function removeItem(itemName) {
 function updateInventory() {
   for (var i = 1; i <= 4; i++) {
     document.getElementById("item" + (i)).src = "images/placeholder/placeholder_no_item.png"
+    document.getElementById("item" + (i)).style.border = "2px white solid";
   }
 
   inventory.forEach((i, index) => {
     var item = items[i];
     document.getElementById("item" + (index + 1)).src = item.icon;
-    
+    if (requiredItem == item) {
+      document.getElementById("item" + (index + 1)).style.border = "2px aqua double";
+    }
+    else {
+      document.getElementById("item" + (index + 1)).style.border = "2px white solid";
+    }
   });
   console.log(inventory);
 }
