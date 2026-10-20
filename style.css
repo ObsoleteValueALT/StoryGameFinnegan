@@ -156,3 +156,12 @@ header {
     transform: translate(-4em, -11em); 
     border-width: 6px;
 }
+
+.update {
+  animation: fadeOut 2s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}

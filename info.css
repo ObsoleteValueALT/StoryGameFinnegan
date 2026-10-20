@@ -1,115 +1,119 @@
 body {
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            margin: 0;
-            background-color: white;
-            color: black;
-        }
-        header {
-            text-align: left;
-            overflow: hidden;
-            padding: 5px;
-            padding-bottom: 1px;
-        }
-        header.a {
-            text-align: right;
-        }
-        h1 {
-            font-size: 45px;
-            text-align: center;
-            vertical-align: top;
-        }
-        p {
-            margin-left: 20%;
-            margin-right: 20%;
-            font-size:larger;
-        }
-        form {
-            text-align: center;
-        }
-        hr {
-            color: black;
-            margin-left: 20%;
-            margin-right: 20%;
-            overflow: visible;
-            text-align: center;
-            height: 4px;
-            padding-bottom: 10px;
-            border: none;
-            border-bottom: 1px solid;
-            margin-bottom: 2em;
-        }
-        .line_small {
-            margin-left: 30%;
-            margin-right: 30%;
-        }
-        .line_small::after {
-            background: white;
-            content: "⚛";
-            
-            position: relative;
-            font-size: 20px;
-        }
-        article {
-            width: 55%; margin: 1em auto; padding: 1em; border: 2px ridge #000000; border-radius: 10px; background-color: white;
-        }
-        br {
-            line-height: 20px;
-        }
-        input {
-            background-color: rgba(255, 255, 255, 0);
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px inset #000000;
-        }
-        input[type="submit"]:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px inset #000000;
-            box-shadow: 3px 3px 3px #00000084;
-        }
-        select {
-            background-color: rgba(255, 255, 255, 0);
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px inset #000000;
-        }
-        select:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px inset #000000;
-            box-shadow: 3px 3px 3px #00000084;
-        }
-        textarea {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px inset #000000;
-            box-shadow: 1px 1px 1px #00000084;
-            resize: none;
-        }
-        header {
-            padding: 30px;
-        }
-        header a {
-            padding: 10px;
-            text-decoration:none; 
-            color:black;
-            border: 4px inset black;
-            border-radius: 5px;
-        }
-        header a:hover {
-            background-color: lightgray;
-            box-shadow: 3px 3px 3px #00000084;
-        }
-        .disabled_button {
-            color: white;
-            background-color: gray;
-            cursor: not-allowed;
-            box-shadow: 3px 3px 3px #00000084;
-        }
-        .disabled_button:hover {
-            background-color: gray;
-            cursor: not-allowed;
-            box-shadow: 3px 3px 3px #00000084;
-        }
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 0;
+    background-color: white;
+    color: black;
+}
+header {
+    text-align: left;
+    overflow: hidden;
+    padding: 5px;
+    padding-bottom: 1px;
+}
+header.a {
+    text-align: right;
+}
+h1 {
+    font-size: 45px;
+    text-align: center;
+    vertical-align: top;
+}
+p {
+    margin-left: 20%;
+    margin-right: 20%;
+    font-size:larger;
+}
+form {
+    text-align: center;
+}
+hr {
+    color: black;
+    margin-left: 20%;
+    margin-right: 20%;
+    overflow: visible;
+    text-align: center;
+    height: 4px;
+    padding-bottom: 10px;
+    border: none;
+    border-bottom: 1px solid;
+    margin-bottom: 2em;
+}
+.line_small {
+    margin-left: 30%;
+    margin-right: 30%;
+}
+.line_small::after {
+    background: white;
+    content: "⚛";
+    
+    position: relative;
+    font-size: 20px;
+}
+article {
+    width: 55%; margin: 1em auto; padding: 1em; border: 2px ridge #000000; border-radius: 10px; background-color: white;
+}
+br {
+    line-height: 20px;
+}
+input {
+    background-color: rgba(255, 255, 255, 0);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px inset #000000;
+}
+input[type="submit"]:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px inset #000000;
+    box-shadow: 3px 3px 3px #00000084;
+}
+select {
+    background-color: rgba(255, 255, 255, 0);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px inset #000000;
+}
+select:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px inset #000000;
+    box-shadow: 3px 3px 3px #00000084;
+}
+textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px inset #000000;
+    box-shadow: 1px 1px 1px #00000084;
+    resize: none;
+}
+header {
+    padding: 30px;
+}
+header a {
+    padding: 10px;
+    text-decoration:none; 
+    color:black;
+    border: 4px inset black;
+    border-radius: 5px;
+}
+header a:hover {
+    background-color: lightgray;
+    box-shadow: 3px 3px 3px #00000084;
+}
+.disabled_button {
+    color: white;
+    background-color: gray;
+    cursor: not-allowed;
+    box-shadow: 3px 3px 3px #00000084;
+}
+.disabled_button:hover {
+    background-color: gray;
+    cursor: not-allowed;
+    box-shadow: 3px 3px 3px #00000084;
+}
+
+
+
+

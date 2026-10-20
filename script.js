@@ -614,25 +614,37 @@ const healthDisplay = document.getElementById("health");
 
 // Create a function to update health 
 function updateHealth() {
-  healthDisplay.innerHTML = "HP: " + health + " / 100";
   if (health <= 0) {
     inspecting = "afterlife";
-    
+    health = 0;
     globalSceneTitle = "You have <em>Died</em>"
     globalSceneText = "Cause of Death: " + lastDamageSource;
     updateScene("death");
   }
+  healthDisplay.innerHTML = "HP: " + health + " / 100";
 }
 
 function takeDamage(dmg, src) {
   health -= dmg;
   lastDamageSource = src;
   updateHealth();
-  document.getElementById("updates").innerHTML = "Took " + dmg + " damage<br>from " + src + "."
+  sendUpdate("Took " + dmg + " damage<br>from " + src + ".");
 }
 
 // This refreshes the health display
 updateHealth();
+
+function sendUpdate(update) {
+  var updatesDisplay = document.getElementById("updates");
+  if (updatesDisplay.classList.contains("update")) {
+    console.log("found it");
+    updatesDisplay.classList.remove("update");
+  }
+  void updatesDisplay.offsetWidth;
+  updatesDisplay.style.opacity = 1;
+  updatesDisplay.innerHTML = update;
+  updatesDisplay.classList.add("update")
+}
 
 // --------------------------------------------------
 // INVENTORY
@@ -895,9 +907,6 @@ function ctrlPanel() {
     else if (inventory.includes("control_panel")) {
       globalSceneText = "You have nothing to screw the <u><em>Control Panel</em><u> in with.";
     }
-    else if (inventory.includes("screwdriver")) {
-      globalSceneText = "Feels like you're missing something to screw in.";
-    }
     else {
       globalSceneText = "The Control Panel is missing... the Control Panel? Like, the entire front Panel?";
     }
@@ -942,7 +951,7 @@ function btnConditionals_Drawer(btn) {
     btn.innerHTML = "Inspect Lower Drawer"
   }
   else { 
-    btn.innerHTML = "Inspect Lower Drawer <em>(Requires Key)</em>"
+    btn.innerHTML = "Inspect Lower Drawer <em>(Requires Code)</em>"
   }
 }
 
