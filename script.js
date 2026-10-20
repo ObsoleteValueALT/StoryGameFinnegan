@@ -75,10 +75,17 @@ const scenes = {
     title: "Location: General Offices",
     character: "Objective: Search for your Supervisor",
     text: "General offices for the Research Sector.",
+    background: "images/placeholder/general_offices_placeholder.png",
     choices: [
       {
         text: "Speak to <em>Supervisor</em>",
-        action: supervisorQuestion
+        action: supervisorQuestion,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/general_offices_placeholder_sel_supervisor.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/general_offices_placeholder.png")
+          },
       },
       {
         text: "<strong>⬐</strong> Exit",
@@ -86,7 +93,13 @@ const scenes = {
       },
       {
           text: "Speak to <em>Intern</em>",
-          action: internGiveCoin
+          action: internGiveCoin,
+          hover: function() {
+            adjustBackgroundTemp("images/placeholder/general_offices_placeholder_sel_intern.png")
+          },
+          mouseOut: function() {
+            adjustBackgroundTemp("images/placeholder/general_offices_placeholder.png")
+          },
       }
     ]
   },
@@ -790,11 +803,11 @@ function securityLendKeycard() {
   inspecting = "sodaMachine";
   globalSceneTitle = "Speaking: Liam Jameson, <em>Security Officer Second Class</em>"
   if (inventory.includes("soda")) {
-    globalSceneText = "\"Just what the doctor ordered. Have my <u><em>Keycard</em></u>.\"";
+    globalSceneText = "\"Just what the doctor ordered. My <u><em>Keycard</em></u>, as promised. Good luck out there.\"";
     pickUpItem("keycard");
     removeItem("soda");
   } else {
-    globalSceneText = "\"You get me a <u><em>Soda</em></u>, I'll lend you my <u><em>Keycard</em></u>.\"";
+    globalSceneText = "\"Investigatin' that smell reeking up in the vents? Tell ya what, you get me a <u><em>Soda</em></u>, I'll lend you my <u><em>Keycard</em></u>. Win-win, right?\"";
   }
   updateScene(currentScene);
 }
