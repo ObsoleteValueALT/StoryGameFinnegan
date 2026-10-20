@@ -154,19 +154,25 @@ const scenes = {
         text: "Enter Storage Room",
         nextScene: "storage_room",
           hover: function() {
-            if (!bulletinBoardInspected) {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_storage.png")
+            if (industrialProcessingUnlocked) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked_sel_storage.png")
+            }
+            else if (bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel_storage.png")
             }
             else {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel_storage.png")
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_storage.png")
             }
           },
           mouseOut: function() {
-            if (!bulletinBoardInspected) {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            if (industrialProcessingUnlocked) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked.png")
+            }
+            else if (bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
             }
             else {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
             }
           },
       },
@@ -179,19 +185,25 @@ const scenes = {
         action: bulletinBoardInspect,
         conditionals: btnConditionals_Board,
           hover: function() {
-            if (!bulletinBoardInspected) {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_board.png")
+            if (industrialProcessingUnlocked) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked_sel_shelf.png")
+            }
+            else if (bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel.png")
             }
             else {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel.png")
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_board.png")
             }
           },
           mouseOut: function() {
-            if (!bulletinBoardInspected) {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            if (industrialProcessingUnlocked) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked.png")
+            }
+            else if (bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
             }
             else {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
             }
           },
       },
@@ -200,23 +212,30 @@ const scenes = {
           action: industrialProcessingDoor,
           conditionals: btnConditionals_Processing,
           hover: function() {
-            if (!bulletinBoardInspected) {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_indproc.png")
+            if (industrialProcessingUnlocked) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked_sel_indproc.png")
+            }
+            else if (bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel_indproc.png")
             }
             else {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf_sel_indproc.png")
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_sel_indproc.png")
             }
           },
           mouseOut: function() {
-            if (!bulletinBoardInspected) {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+            if (industrialProcessingUnlocked) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked.png")
+            }
+            else if (bulletinBoardInspected) {
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
             }
             else {
-              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+              adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
             }
           },
       }
     ],
+    conditionals: roomConditionals_MaintHallway
   },
 
   storage_room: {
@@ -375,12 +394,20 @@ const scenes = {
         },
       }
     ],
-    
+    conditionals: roomConditionals_Processing
   },
   wasteDisposalSite: {
       title: "Location: Fume Source<em>?</em>",
       text: "You've found the source of the problem. It seems as if, this entire time, the corporation has been dumping this waste improperly to save money. They must have gone through some lengths to hide this, judging by the huge vat blocking this room and the electrical panel being tampered with.",
-      background: "images/placeholder/waste_site.png"
+      background: "images/placeholder/waste_site.png",
+      choices: [
+        {
+          text: "<strong>RESTART</strong>",
+          action: function() {
+            location.reload();
+          }
+        }
+      ]
     },
   electricalPanelExamine_w1: {
       title: "Inspecting: Model HV-5400 Electrical Access Panel",
@@ -543,6 +570,9 @@ function updateScene(sceneName) {
 
   if (scene.background) {
     document.getElementById("background_image").src = scene.background;
+  }
+  if (scene.conditionals) {
+    scene.conditionals();
   }
 
     // Here, for each html element, you change the textContent to match
@@ -964,4 +994,26 @@ function btnConditionals_Board(btn) {
   }
 }
 
+function roomConditionals_MaintHallway() {
+  if (industrialProcessingUnlocked) {
+    adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_unlocked.png")
+  }
+  else if (bulletinBoardInspected) {
+    adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder_shelf.png")
+  }
+  else {
+    adjustBackgroundTemp("images/placeholder/maint_hallway_placeholder.png")
+  }
+}
 
+function roomConditionals_Processing() {
+  if (!dumpEntranceBlocked) {
+    adjustBackgroundTemp("images/placeholder/indproc_placeholder_door.png")
+  }
+  else if (controlPanelRepaired) {
+    adjustBackgroundTemp("images/placeholder/indproc_placeholder_panel.png")
+  }
+  else {
+    adjustBackgroundTemp("images/placeholder/indproc_placeholder.png")
+  }
+}
